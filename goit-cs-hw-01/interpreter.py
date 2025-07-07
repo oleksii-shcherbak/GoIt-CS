@@ -180,14 +180,19 @@ class Interpreter:
         return method(node)
 
     def visit_BinOp(self, node):
+        left = self.visit(node.left)
+        right = self.visit(node.right)
+
         if node.op.type == TokenType.PLUS:
-            return self.visit(node.left) + self.visit(node.right)
+            return left + right
         elif node.op.type == TokenType.MINUS:
-            return self.visit(node.left) - self.visit(node.right)
+            return left - right
         elif node.op.type == TokenType.MUL:
-            return self.visit(node.left) * self.visit(node.right)
+            return left * right
         elif node.op.type == TokenType.DIV:
-            return self.visit(node.left) / self.visit(node.right)
+            if right == 0:
+                raise ZeroDivisionError("Division by zero is not allowed")
+            return left / right
 
     def visit_Num(self, node):
         return node.value
@@ -214,6 +219,10 @@ def main():
             interpreter = Interpreter(parser)
             result = interpreter.interpret()
             print(f"Result: {result}")
+        except ZeroDivisionError as zde:
+            print(f"Math Error: {zde}")
+        except (LexicalError, ParsingError) as parse_error:
+            print(f"Syntax Error: {parse_error}")
         except Exception as e:
             print(f"Error: {e}")
 
