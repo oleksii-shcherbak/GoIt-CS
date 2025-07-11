@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: hw02_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 567234
+      POSTGRES_DB: hw02
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - hw02_network
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hw02_fastapi
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    environment:
+      - SQLALCHEMY_DATABASE_URL=postgresql+psycopg2://postgres:567234@db:5432/hw02
+    networks:
+      - hw02_network
+
+volumes:
+  postgres_data:
+
+networks:
+  hw02_network:
