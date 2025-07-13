@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:latest
+    container_name: hw03_postgres_clean
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hw03_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
