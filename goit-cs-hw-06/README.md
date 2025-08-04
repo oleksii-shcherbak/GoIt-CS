@@ -45,4 +45,4 @@ Then open http://localhost:3000 manually.
 
 ## Note
 
-Port 5000 may be occupied on macOS by AirPlay. If you encounter issues, disable AirPlay Receiver in System Settings > General > AirDrop & Handoff.
+Port 5000 may be occupied on macOS by AirPlay. If you encounter issues, try different ports.
