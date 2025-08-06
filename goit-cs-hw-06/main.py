@@ -1,7 +1,7 @@
 import http.server
 import socketserver
 import socket
-import threading
+import multiprocessing
 import json
 import urllib.parse
 import mimetypes
@@ -196,22 +196,26 @@ def run_socket_server():
 
 def main():
     """Main function to start both servers"""
-    # Create threads for both servers
-    http_thread = threading.Thread(target=run_http_server, daemon=True)
-    socket_thread = threading.Thread(target=run_socket_server, daemon=True)
+    # Create processes for both servers
+    http_process = multiprocessing.Process(target=run_http_server)
+    socket_process = multiprocessing.Process(target=run_socket_server)
 
-    # Start both threads
-    http_thread.start()
-    socket_thread.start()
+    # Start both processes
+    http_process.start()
+    socket_process.start()
 
     logger.info("Both servers started successfully")
 
-    # Keep the main thread alive
+    # Keep the main process alive
     try:
-        http_thread.join()
-        socket_thread.join()
+        http_process.join()
+        socket_process.join()
     except KeyboardInterrupt:
         logger.info("Shutting down servers...")
+        http_process.terminate()
+        socket_process.terminate()
+        http_process.join()
+        socket_process.join()
 
 
 if __name__ == "__main__":
